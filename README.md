@@ -81,6 +81,12 @@ GUI launch:
 python main.py
 ```
 
+## GUI Preview
+
+![BPM-X GUI](docs/images/gui-home.png)
+
+If the image does not render, add your screenshot file at `docs/images/gui-home.png` and push again.
+
 ## CLI Commands
 
 ### analyze
