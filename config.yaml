@@ -1,0 +1,30 @@
+# BPM-X Configuration File
+# Customize behavior and defaults
+
+# Library and workspace paths
+library_path: data/library
+workspace_path: data/workspace
+
+# Audio analysis settings
+audio_sample_rate: 22050  # Hz (44100 for higher quality, more CPU)
+
+# File naming template for organized library
+# Available placeholders: {BPM}, {KEY}, {CAMELOT}, {ORIGINAL}
+naming_template: "{BPM} - {CAMELOT} - {ORIGINAL}"
+
+# Logging
+log_level: INFO  # DEBUG, INFO, WARNING, ERROR
+
+# Behavior settings
+auto_organize: false     # Automatically organize files after tagging
+overwrite_tags: false    # Overwrite existing metadata tags
+move_files: false        # Move instead of copy when organizing
+
+# Energy analysis settings
+energy_enabled: true
+energy_threshold_low: 3
+energy_threshold_high: 8
+
+# FL Studio specific metadata
+inject_heartbeat: true   # Write BPM to file "heartbeat" for DAW sync
+inject_camelot: true     # Include Camelot notation in tags
