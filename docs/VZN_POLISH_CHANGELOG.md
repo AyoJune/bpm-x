@@ -79,7 +79,7 @@ For each analyzed track:
 ```
 Drag-and-Drop Setup
 
-tkdnd requires system-level linkage on Windows.
+tkdnd may require extra system linkage depending on the platform.
 
 Option 1 - Use SELECT Button:
   Click 'Select File/Folder'. Works identically to drag-and-drop.

@@ -10,7 +10,7 @@
 ## 🔍 Testing Summary
 
 ### Test Environment
-- **OS:** Windows
+- **OS:** Windows test run (macOS compatibility not yet runtime-verified)
 - **Python:** CPython 3.14.3
 - **Audio Library:** librosa 0.11.0
 - **Metadata Library:** mutagen 1.47.0
@@ -283,6 +283,7 @@ python __main__.py batch workspace/ --dest library/ --move
 ## 📝 Log Locations
 
 - **Main Log:** `C:\Users\{USERNAME}\.bpm-x\logs\bpm-x.log`
+- **macOS/Linux Log:** `~/.bpm-x/logs/bpm-x.log`
 - **Rolling:** 5 backups, 10MB each
 - **Log Level:** INFO (change in config.yaml for DEBUG)
 
@@ -307,10 +308,10 @@ python __main__.py batch workspace/ --dest library/ --move
 ## 🎯 Next Steps
 
 1. Test with real audio files (actual production samples/loops)
-2. Install FFmpeg if audio conversion needed: `winget install ffmpeg`
+2. Install FFmpeg if audio conversion needed: `winget install ffmpeg` or `brew install ffmpeg`
 3. Start organizing your sample packs:
    ```bash
-   python __main__.py batch C:\samples --dest C:\Music\library --move -v
+   python __main__.py batch /path/to/samples --dest /path/to/library --move -v
    ```
 4. Validate tagged files with repeat analysis output
 

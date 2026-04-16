@@ -3,14 +3,20 @@
 ## Installation (2 minutes)
 
 ```bash
-cd c:\Projects\bpm-x
+cd /path/to/bpm-x
 
 # Create virtual environment
 python -m venv venv
-venv\Scripts\activate
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+```
+
+Windows activation:
+
+```powershell
+venv\Scripts\activate
 ```
 
 ## First Run (3 examples)
@@ -18,7 +24,7 @@ pip install -r requirements.txt
 ### 1️⃣ Analyze a Track
 ```bash
 # Detect BPM and Key from MP3
-python -m bpm_x analyze C:\Path\To\track.mp3
+python -m bpm_x analyze /path/to/track.mp3
 
 # Expected output:
 # File: track.mp3
@@ -37,8 +43,8 @@ python -m bpm_x tag *.mp3
 ### 3️⃣ Organize Sample Pack
 ```bash
 # Sort sample pack by BPM/Camelot (8A, 8B, 9A, etc)
-python -m bpm_x batch C:\samples\pack \
-  --dest C:\Music\library \
+python -m bpm_x batch /path/to/samples/pack \
+  --dest /path/to/music/library \
   --move
 
 # Result:
@@ -64,14 +70,14 @@ python -m bpm_x tag *.mp3 --overwrite
 python -m bpm_x organize file.mp3 --dest data/library --move
 
 # BATCH - Full workflow (analyze + tag + organize)
-python -m bpm_x batch C:\samples --dest C:\Music\lib --move -v
+python -m bpm_x batch /path/to/samples --dest /path/to/music/lib --move -v
 ```
 
 ## Metadata Verification Steps
 
 1. **Run BPM-X on your samples:**
    ```bash
-   python -m bpm_x batch C:\samples --move
+  python -m bpm_x batch /path/to/samples --move
    ```
 
 2. **Verify tagging worked:**
@@ -108,6 +114,10 @@ pip install librosa mutagen pydub
 **Q: "ffmpeg not found"**
 ```bash
 winget install ffmpeg
+```
+
+```bash
+brew install ffmpeg
 ```
 
 **Q: Analysis is slow**
@@ -172,7 +182,7 @@ print(f"{analysis['bpm']} BPM, {analysis['key']}")
 
 - Check logs:
   ```bash
-  cat %USERPROFILE%\.bpm-x\logs\bpm-x.log
+  cat ~/.bpm-x/logs/bpm-x.log
   ```
 
 - Review examples in README.md
@@ -181,5 +191,5 @@ print(f"{analysis['bpm']} BPM, {analysis['key']}")
 
 **Ready to organize your music? Start with:**
 ```bash
-python -m bpm_x batch C:\samples --dest C:\Music\library --move -v
+python -m bpm_x batch /path/to/samples --dest /path/to/music/library --move -v
 ```

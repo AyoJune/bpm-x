@@ -92,7 +92,7 @@ python __main__.py organize file.mp3 --dest library/
 
 **Complete workflow (All-in-one):**
 ```bash
-python __main__.py batch C:\samples --dest C:\Music\library --move
+python __main__.py batch /path/to/samples --dest /path/to/library --move
 ```
 
 **Show help:**
@@ -145,7 +145,7 @@ All major components are working:
 ### For Testing Real Audio:
 ```bash
 # Copy your sample pack to workspace
-cp C:\samples\*.mp3 data/workspace/
+cp /path/to/samples/*.mp3 data/workspace/
 
 # Run full workflow
 python __main__.py batch data/workspace --dest data/library --move
@@ -170,6 +170,10 @@ python __main__.py batch data/workspace --dest data/library --move
 winget install ffmpeg
 ```
 
+```bash
+brew install ffmpeg
+```
+
 ---
 
 ## 📞 Troubleshooting
@@ -188,7 +192,7 @@ winget install ffmpeg
 
 3. ✅ Check logs:
    ```bash
-   cat %USERPROFILE%\.bpm-x\logs\bpm-x.log
+   cat ~/.bpm-x/logs/bpm-x.log
    ```
 
 4. ✅ All test files exist:
@@ -206,7 +210,7 @@ Every command works. Every feature tested. Every workflow verified.
 
 Start organizing your music:
 ```bash
-python __main__.py batch C:\your\samples --dest C:\your\library --move
+python __main__.py batch /path/to/your/samples --dest /path/to/your/library --move
 ```
 
 **Built for reliable audio metadata and library workflows.**

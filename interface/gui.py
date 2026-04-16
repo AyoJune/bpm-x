@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import csv
 import json
+import platform
 import queue
 import shutil
+import subprocess
 import threading
 import tkinter as tk
 from pathlib import Path
@@ -25,6 +27,9 @@ try:
     HAS_WINSOUND = True
 except ImportError:
     HAS_WINSOUND = False
+
+
+IS_MACOS = platform.system() == "Darwin"
 
 try:
     from pydub import AudioSegment
@@ -142,6 +147,40 @@ class BPMXGUI(ctk.CTk):
         self._build_layout()
         self._start_ui_polling()
 
+    @staticmethod
+    def _ffmpeg_install_hint() -> str:
+        if IS_MACOS:
+            return "brew install ffmpeg"
+        return "winget install ffmpeg"
+
+    @staticmethod
+    def _dnd_help_text() -> str:
+        if IS_MACOS:
+            return (
+                "Drag-and-Drop Setup\n\n"
+                "tkdnd (Tkinter drag-and-drop) may require extra system linkage on macOS.\n\n"
+                "Option 1 - Use SELECT Button:\n"
+                "Click 'Select Samples' above and choose one or more audio files directly.\n\n"
+                "Option 2 - Fix tkdnd Linkage (Advanced):\n"
+                "1. Install: pip install tkinterdnd2 TkinterDnD2-Universal\n"
+                "2. Ensure Tcl/Tk is available to your Python build\n"
+                "3. Restart the application after installation\n\n"
+                "Note: Fallback mode is active and fully functional. No action is required to use BPM-X."
+            )
+
+        return (
+            "Drag-and-Drop Setup\n\n"
+            "tkdnd (Tkinter drag-and-drop) may require extra system linkage on Windows.\n\n"
+            "Option 1 - Use SELECT Button:\n"
+            "Click 'Select Samples' above and choose one or more audio files directly.\n\n"
+            "Option 2 - Fix tkdnd Linkage (Advanced):\n"
+            "1. Install: pip install tkinterdnd2 TkinterDnD2-Universal\n"
+            "2. Download tkdnd binary from GitHub (tkdnd/tkdnd releases)\n"
+            "3. Extract to: {Python}/tcl/tkdnd{version}\n"
+            "4. Restart the application\n\n"
+            "Note: Fallback mode is active and fully functional. No action is required to use BPM-X."
+        )
+
     def _build_layout(self) -> None:
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -196,7 +235,10 @@ class BPMXGUI(ctk.CTk):
             command=self._recheck_ffmpeg,
         )
         self.ffmpeg_recheck_btn.pack(side="left", padx=(8, 0))
-        HoverTip(self.ffmpeg_recheck_btn, "Re-check FFmpeg availability\n(run after: winget install ffmpeg)")
+        HoverTip(
+            self.ffmpeg_recheck_btn,
+            f"Re-check FFmpeg availability\n(run after: {self._ffmpeg_install_hint()})",
+        )
 
         self.btn_select = ctk.CTkButton(
             self.sidebar,
@@ -499,7 +541,11 @@ class BPMXGUI(ctk.CTk):
             text="FFmpeg: detected" if ffmpeg_ok else "FFmpeg: missing",
             fg_color=ACCENT_CYAN if ffmpeg_ok else "#E74C3C",
         )
-        status = "FFmpeg detected — MP3 preview enabled." if ffmpeg_ok else "FFmpeg not found. Run: winget install ffmpeg"
+        status = (
+            "FFmpeg detected — MP3 preview enabled."
+            if ffmpeg_ok
+            else f"FFmpeg not found. Run: {self._ffmpeg_install_hint()}"
+        )
         self.ui_queue.put(("log", status))
 
     @staticmethod
@@ -840,31 +886,24 @@ class BPMXGUI(ctk.CTk):
                 self.ui_queue.put(("log", f"Previewing: {path.name}"))
                 return
 
+            if IS_MACOS and shutil.which("afplay") is not None:
+                self.ui_queue.put(("log", f"Previewing: {path.name}"))
+                subprocess.run(["afplay", str(path)], check=False)
+                return
+
             if HAS_PYDUB_PLAYBACK:
                 segment = AudioSegment.from_file(str(path))
                 self.ui_queue.put(("log", f"Previewing: {path.name}"))
                 pydub_play(segment)
                 return
 
-            self.ui_queue.put(("log", "Preview unavailable: install audio backend or use WAV files."))
+            self.ui_queue.put(("log", "Preview unavailable: install an audio backend or FFmpeg."))
         except Exception as exc:
             self.ui_queue.put(("log", f"Preview failed for {path.name}: {exc}"))
 
     def show_dnd_help(self) -> None:
         """Display tkdnd installation and linkage instructions."""
-        help_text = (
-            "Drag-and-Drop Setup\n\n"
-            "tkdnd (Tkinter native drag-and-drop) requires system-level linkage on Windows.\n\n"
-            "Option 1 - Use SELECT Button:\n"
-            "Click 'Select Samples' above, open the folder you want, then use Ctrl+A to batch the visible audio files.\n\n"
-            "Option 2 - Fix tkdnd Linkage (Advanced):\n"
-            "1. Install: pip install tkinterdnd2 TkinterDnD2-Universal\n"
-            "2. Download tkdnd binary from GitHub (tkdnd/tkdnd releases)\n"
-            "3. Extract to: {Python}/tcl/tkdnd{version}\n"
-            "4. Restart Python application\n\n"
-            "Note: Fallback mode is active and fully functional. No action required to use BPM-X."
-        )
-        messagebox.showinfo("BPM-X | DnD Help", help_text)
+        messagebox.showinfo("BPM-X | DnD Help", self._dnd_help_text())
 
     def _start_ui_polling(self) -> None:
         self.after(100, self._process_ui_queue)

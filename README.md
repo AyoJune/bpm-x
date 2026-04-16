@@ -36,19 +36,29 @@ bpm-x/
 - Python 3.8+
 - FFmpeg on PATH (recommended for conversion-heavy workflows)
 
-Windows install example:
+Install FFmpeg:
 
 ```powershell
 winget install ffmpeg
 ```
 
+```bash
+brew install ffmpeg
+```
+
 ## Install
 
-```powershell
-cd c:\Projects\bpm-x
+```bash
+cd /path/to/bpm-x
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+Windows activation:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
 ```
 
 Optional editable install (enables the bpm-x console command):
@@ -63,23 +73,25 @@ Two supported ways:
 
 1. Script launcher:
 
-```powershell
+```bash
 python main.py --help
-python main.py analyze path\to\track.mp3
+python main.py analyze path/to/track.mp3
 ```
 
 2. Console entry point (after editable install):
 
-```powershell
+```bash
 bpm-x --help
-bpm-x batch data\workspace --dest data\library --move
+bpm-x batch data/workspace --dest data/library --move
 ```
 
 GUI launch:
 
-```powershell
+```bash
 python main.py
 ```
+
+macOS note: GUI preview can use the built-in `afplay` command when available.
 
 ## GUI Preview
 
@@ -91,7 +103,7 @@ If the image does not render, add your screenshot file at `docs/images/gui-home.
 
 ### analyze
 
-```powershell
+```bash
 python main.py analyze file1.mp3 file2.wav --format table
 ```
 
@@ -99,24 +111,24 @@ Formats: json, table, simple
 
 ### tag
 
-```powershell
+```bash
 python main.py tag file.mp3 --overwrite
 python main.py tag file.mp3 --bpm 128 --key "D Minor"
 ```
 
 ### organize
 
-```powershell
-python main.py organize data\workspace --dest data\library --move
+```bash
+python main.py organize data/workspace --dest data/library --move
 python main.py organize loop.mp3 --template "{BPM} - {CAMELOT} - {ORIGINAL}"
 ```
 
 ### batch
 
-```powershell
-python main.py batch data\workspace --dest data\library --move
-python main.py batch data\workspace --skip-tag
-python main.py batch data\workspace --skip-organize
+```bash
+python main.py batch data/workspace --dest data/library --move
+python main.py batch data/workspace --skip-tag
+python main.py batch data/workspace --skip-organize
 ```
 
 ## Configuration
@@ -141,7 +153,7 @@ Project includes test utilities under tests/ and status docs under docs/.
 
 Quick checks:
 
-```powershell
+```bash
 python tests\test_features.py
 python tests\test_audio_generator.py
 ```
@@ -150,6 +162,7 @@ python tests\test_audio_generator.py
 
 - Keep MoviePy v1 API compatibility if you rely on moviepy.editor imports.
 - On Windows, ImageMagick may be required for TextClip-related workflows.
+- On macOS, install FFmpeg with Homebrew before using conversion-heavy workflows.
 
 ## Documentation
 
